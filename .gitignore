@@ -1,6 +1,6 @@
 node_modules
 dist
-./Broker/log.txt
+/Broker/log.txt
 # compiled output
 /dist
 /node_modules
