@@ -11,23 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code 
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Node
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'  
+        cache: 'npm'
 
-    - name: Install dependencies
-      working-directory: ./API
+    - name: Install API dependencies
       run: npm ci
-
-    - name: Test
       working-directory: ./API
+
+    - name: Run tests for API
       run: npm run test
-
-    - name: Lint
       working-directory: ./API
+
+    - name: Lint API
       run: npm run lint
+      working-directory: ./API
