@@ -29,11 +29,21 @@ class Flight extends Model {
     })
     declare departureAirportId: string;
 
+    @Column({
+        type: DataType.DATE,
+    })
+    declare departureDate: Date;
+
     @ForeignKey(() => Airport)
     @Column({
         type: DataType.STRING,
     })
     declare arrivalAirportId: string;
+
+    @Column({
+        type: DataType.DATE,
+    })
+    declare arrivalDate: Date;
 
     // Atrributes
     @Column({
