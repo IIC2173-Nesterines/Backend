@@ -11,22 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Cheockout code
+    - name: Checkout code 
       uses: actions/checkout@v3
 
     - name: Set up Node
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'  
 
-    - name: Change work dir
-      run: cd API 
-    
     - name: Install dependencies
+      working-directory: ./API
       run: npm ci
 
     - name: Test
+      working-directory: ./API
       run: npm run test
 
     - name: Lint
+      working-directory: ./API
       run: npm run lint
