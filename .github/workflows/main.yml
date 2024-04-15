@@ -16,12 +16,9 @@ jobs:
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
-      # with:
-      #   node-version: '18'
-      #   cache: 'npm'
-    - name: Check working directory and list files
-      run: pwd && ls -la
-      working-directory: ./API
+      with:
+        node-version: '18'
+        cache: 'npm'
 
     - name: Install API dependencies
       run: npm ci
