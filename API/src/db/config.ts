@@ -1,9 +1,7 @@
-import 'dotenv/config';
+import "dotenv/config"
+import { Sequelize } from "sequelize-typescript"
 
-import { Sequelize } from "sequelize-typescript";
-
-// Define sequelize instance
-export const sequelize = new Sequelize({
+const sequelize = new Sequelize({
     database: process.env.DATABASE_NAME,
     dialect: 'postgres',
     username: process.env.DATABASE_USER,
@@ -12,3 +10,5 @@ export const sequelize = new Sequelize({
     port: parseInt(process.env.DATABASE_PORT),
     models: [__dirname + '/models']
 })
+
+export default sequelize;
