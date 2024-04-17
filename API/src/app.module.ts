@@ -16,4 +16,5 @@ import sequelize from './db/config';
     AuthzModule,
   ],
 })
+
 export class AppModule {}
