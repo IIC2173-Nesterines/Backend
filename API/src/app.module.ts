@@ -4,6 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthzModule } from './authz/authz.module';
 import { UsersModule } from './users/users.module';
 import { FlightsModule } from './flights/flights.module';
+import { AuthzModule } from './authz/authz.module';
 import sequelize from './db/config';
 
 @Module({
