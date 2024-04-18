@@ -1,27 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import sequelize from '../db/config';
 
 @Injectable()
 export class UsersService {
 
-  create(createUserDto: CreateUserDto) {
-    return `This action create user`;
+  create(createUserDto) {
+    return sequelize.models.Users.create(createUserDto);
   }
 
   findAll() {
-    return `This action returns all users`;
+    return sequelize.models.Users.findAll();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return sequelize.models.Users.findByPk(id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return sequelize.models.Users.update(updateUserDto, {
+      where: {
+        id: id
+      }
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return sequelize.models.Users.destroy({
+      where: {
+        id: id
+      }
+    });
   }
 }

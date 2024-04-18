@@ -1,13 +1,11 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import sequelize from './db/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-  }));
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 
   try {
@@ -18,6 +16,7 @@ async function bootstrap() {
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
+
 }
 
 bootstrap();
