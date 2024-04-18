@@ -2,7 +2,7 @@
 
 # Set the environment variables get from .env
 source .env
-
+npm install
 
 # Set the environment variable for PostgreSQL password
 export PGPASSWORD="$DATABASE_PASSWORD"
