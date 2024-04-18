@@ -13,8 +13,6 @@ import sequelize from './db/config';
     AuthzModule,
     FlightsModule,
     ConfigModule.forRoot(),
-    AuthzModule,
   ],
 })
-
 export class AppModule {}
