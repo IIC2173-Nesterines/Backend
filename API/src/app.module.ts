@@ -1,10 +1,14 @@
+import "dotenv/config"
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AppService } from './app.service';
+import sequelize from "./db/config";
 
 @Module({
-  imports: [],
-  controllers: [AppController],
+  imports: [
+    SequelizeModule.forRoot(sequelize.options),
+  ],
   providers: [AppService],
 })
+
 export class AppModule {}

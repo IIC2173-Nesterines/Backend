@@ -5,7 +5,7 @@ import Flight from './Flight';
 @Table({
     timestamps: true,
     tableName: 'tickets',
-    modelName: 'Ticket'
+    modelName: 'Tickets'
 })
 class Ticket extends Model {
     @ForeignKey(() => User)

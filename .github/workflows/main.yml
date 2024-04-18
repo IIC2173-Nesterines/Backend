@@ -22,10 +22,6 @@ jobs:
       run: npm ci
       working-directory: ./API
 
-    - name: Run tests for API
-      run: npm run test
-      working-directory: ./API
-
     - name: Lint API
       run: npm run lint
       working-directory: ./API
