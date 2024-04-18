@@ -38,13 +38,13 @@ client.on('message', (topic, message) => {
         obj.carbonEmission = JSON.parse(obj.carbonEmission);
     });
     console.log('Received message from topic:', message);
-    axios.post(api_url, message)
-        .then(response => {
-            console.log('Response:', response.data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    // axios.post(api_url, message)
+    //     .then(response => {
+    //         console.log('Response:', response.data);
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //     });
 });
 
 client.on('error', function (error) {
