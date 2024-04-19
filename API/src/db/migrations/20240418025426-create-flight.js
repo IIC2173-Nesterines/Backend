@@ -55,6 +55,7 @@ module.exports = {
       },
     });
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Flights');
   },
