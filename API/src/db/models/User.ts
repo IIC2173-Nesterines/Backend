@@ -7,6 +7,12 @@ import Request from './Request';
   modelName: 'Users',
 })
 class User extends Model {
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+  })
+  declare sessionId: string;
 
   @Column({
     type: DataType.STRING,
@@ -26,4 +32,4 @@ class User extends Model {
   declare requests: Request[];
 }
 
-export default User; 
+export default User;

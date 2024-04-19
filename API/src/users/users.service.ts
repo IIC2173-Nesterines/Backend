@@ -4,7 +4,6 @@ import sequelize from '../db/config';
 
 @Injectable()
 export class UsersService {
-
   create(createUserDto) {
     return sequelize.models.Users.create(createUserDto);
   }
@@ -13,23 +12,23 @@ export class UsersService {
     return sequelize.models.Users.findAll();
   }
 
-  findOne(id: number) {
-    return sequelize.models.Users.findByPk(id);
+  async findOne(id: string) {
+    return await sequelize.models.Users.findOne({ where: { sessionId: id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     return sequelize.models.Users.update(updateUserDto, {
       where: {
-        id: id
-      }
+        sessionId: id,
+      },
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return sequelize.models.Users.destroy({
       where: {
-        id: id
-      }
+        sessionId: id,
+      },
     });
   }
 }

@@ -5,8 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(3001);
 
   try {
     await sequelize.authenticate();
@@ -16,7 +17,6 @@ async function bootstrap() {
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
-
 }
 
 bootstrap();
