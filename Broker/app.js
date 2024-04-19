@@ -27,6 +27,7 @@ client.on('connect', () => {
 });
 client.on('message', (topic, message) => {
     message = message.toString();
+    console.log('Received message from topic:', message);
     fs.appendFile('log.txt', message + '\n', (err) => {
         if (err) {
             console.error('Error appending buffer to log.txt:', err);
@@ -37,14 +38,17 @@ client.on('message', (topic, message) => {
         obj.flights = JSON.parse(obj.flights);
         obj.carbonEmission = JSON.parse(obj.carbonEmission);
     });
-    console.log('Received message from topic:', message);
-    // axios.post(api_url, message)
-    //     .then(response => {
-    //         console.log('Response:', response.data);
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //     });
+    console.log('Received message from topic:', message[0]);
+    console.log(api_url)
+    console.log('Body: ', message[0].flights)
+
+    axios.post(api_url, message[0])
+        .then(response => {
+            console.log('Response:', response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 });
 
 client.on('error', function (error) {

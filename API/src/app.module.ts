@@ -1,8 +1,9 @@
-import 'dotenv/config';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthzModule } from './authz/authz.module';
 import { UsersModule } from './users/users.module';
+import { FlightsModule } from './flights/flights.module';
 import sequelize from './db/config';
 
 @Module({
@@ -10,6 +11,8 @@ import sequelize from './db/config';
     SequelizeModule.forRoot(sequelize.options),
     UsersModule,
     AuthzModule,
+    FlightsModule,
+    ConfigModule.forRoot(),
   ],
 })
 export class AppModule {}

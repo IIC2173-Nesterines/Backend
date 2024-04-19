@@ -11,7 +11,7 @@ import Flight from './Flight';
 
 @Table({
   timestamps: true,
-  tableName: 'requests',
+  tableName: 'Requests',
   modelName: 'Request',
 })
 class Request extends Model {

@@ -33,7 +33,7 @@ module.exports = {
       airlineLogo: {
         type: Sequelize.STRING,
       },
-      carbonEmissions: {
+      carbonEmission: {
         type: Sequelize.INTEGER,
       },
       price: {
