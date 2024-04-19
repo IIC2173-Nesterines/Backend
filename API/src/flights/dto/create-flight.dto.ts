@@ -1,35 +1,4 @@
-// export class CreateFlightDto {
-//   "flights": [
-//     {
-//       "departureAirport": {
-//         "name": string;
-//         "id": string;
-//         "time": Date;
-//       };
-//       "arrivalAirport": {
-//         "name": string;
-//         "id": string;
-//         "time": Date;
-//       };
-//       "duration": number;
-//       "airplane": string;
-//       "airline": string;
-//       "airline_logo": string;
-//     },
-//   ];
-//   "price": number;
-//   "carbonEmission": { "this_flight": number };
-//   "airlineLogo": string;
-//   "currency": string;
-// }
-
-import {
-  IsString,
-  IsNumber,
-  IsArray,
-  // IsObject,
-  ValidateNested,
-} from 'class-validator';
+import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class AirportDto {
@@ -98,7 +67,6 @@ export class CreateFlightModelDto {
   duration: number;
   airplane: string;
   airline: string;
-  // airlineLogo: createFlightDto.flights[0].airline_logo,
   price: number;
   carbonEmission: number;
   airlineLogo: string;

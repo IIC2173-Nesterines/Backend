@@ -5,10 +5,6 @@ import sequelize from '../db/config';
 
 @Injectable()
 export class FlightsService {
-  // constructor(
-  //   @InjectModel(Flight)
-  //   private flightModel: typeof Flight,
-  // ) {}
   async create(createFlightDto: CreateFlightDto) {
     console.log(createFlightDto);
     let departureAirport = await sequelize.models.Airport.findByPk(
@@ -30,7 +26,6 @@ export class FlightsService {
         createFlightDto.flights[0].arrival_airport.name,
       );
     }
-    console.log('AAAAAAAA');
     const flight_data = {
       departureAirportId: createFlightDto.flights[0].departure_airport.id,
       departureDate: createFlightDto.flights[0].departure_airport.time,
@@ -39,7 +34,6 @@ export class FlightsService {
       duration: createFlightDto.flights[0].duration,
       airplane: createFlightDto.flights[0].airplane,
       airline: createFlightDto.flights[0].airline,
-      // airlineLogo: createFlightDto.flights[0].airline_logo,
       price: createFlightDto.price,
       carbonEmission: createFlightDto.carbonEmission.this_flight,
       airlineLogo: createFlightDto.airlineLogo,
@@ -49,12 +43,6 @@ export class FlightsService {
     console.log(flight_data);
     const flight = sequelize.models.Flight.create(flight_data);
     return flight;
-    // const flight = new this.flightModel();
-
-    // sequelize.models.Flight.create();
-    // return 'This action adds a new flight';
-    // return flight.save();
-    // return flight;
   }
 
   async findAll() {
