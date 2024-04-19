@@ -3,11 +3,10 @@ import Request from './Request';
 
 @Table({
   timestamps: true,
-  tableName: 'users',
+  tableName: 'Users',
   modelName: 'Users',
 })
 class User extends Model {
-
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -26,4 +25,4 @@ class User extends Model {
   declare requests: Request[];
 }
 
-export default User; 
+export default User;
