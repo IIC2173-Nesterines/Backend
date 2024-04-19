@@ -4,8 +4,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthzModule } from './authz/authz.module';
 import { UsersModule } from './users/users.module';
 import { FlightsModule } from './flights/flights.module';
-import { AuthzModule } from './authz/authz.module';
-import { UsersModule } from './users/users.module';
 import sequelize from './db/config';
 
 @Module({
@@ -15,7 +13,6 @@ import sequelize from './db/config';
     AuthzModule,
     FlightsModule,
     ConfigModule.forRoot(),
-    AuthzModule,
   ],
 })
 export class AppModule {}
