@@ -6,7 +6,6 @@ module.exports = {
       sessionId: {
         allowNull: false,
         type: Sequelize.STRING,
-        primaryKey: true,
         unique: true,
       },
       email: {

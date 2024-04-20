@@ -1,5 +1,5 @@
 export class User {
-  id: number;
+  sessionId: number;
   email: string;
   username: string;
   createdAt: Date;

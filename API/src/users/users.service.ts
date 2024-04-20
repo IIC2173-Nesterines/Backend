@@ -23,8 +23,8 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return sequelize.models.Users.findAll();
+  async findAll() {
+    return await sequelize.models.Users.findAll();
   }
 
   async findOne(id: string) {

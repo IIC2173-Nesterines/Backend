@@ -3,7 +3,7 @@ import Request from './Request';
 
 @Table({
   timestamps: true,
-  tableName: 'users',
+  tableName: 'Users',
   modelName: 'Users',
 })
 class User extends Model {
@@ -11,6 +11,7 @@ class User extends Model {
     type: DataType.STRING,
     allowNull: false,
     unique: true,
+    primaryKey: true,
   })
   declare sessionId: string;
 
