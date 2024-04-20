@@ -45,8 +45,26 @@ export class FlightsService {
     return flight;
   }
 
-  async findAll() {
-    return sequelize.models.Flight.findAll();
+  async findAll({ departure, arrival, date, amount, page }) {
+    const where = {};
+    if (departure) {
+      where['departureAirportId'] = departure;
+    }
+    if (arrival) {
+      where['arrivalAirportId'] = arrival;
+    }
+    if (date) {
+      where['departureDate'] = date;
+    }
+    const limit = amount || 25; // Default to 10 items per page if amount not specified
+    const currentPage = page || 1; // Default to page 1 if page not specified
+    const offset = (currentPage - 1) * limit;
+
+    return sequelize.models.Flight.findAll({
+      where,
+      limit,
+      offset,
+    });
   }
 
   async findOne(id: number) {

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FlightsService } from './flights.service';
 import { CreateFlightDto } from './dto/create-flight.dto';
@@ -21,8 +22,14 @@ export class FlightsController {
   }
 
   @Get()
-  findAll() {
-    return this.flightsService.findAll();
+  findAll(@Query() params: any) {
+    return this.flightsService.findAll({
+      departure: params.departure,
+      arrival: params.arrival,
+      date: params.date,
+      amount: params.amount,
+      page: params.page,
+    });
   }
 
   @Get(':id')
