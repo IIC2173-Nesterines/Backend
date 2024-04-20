@@ -50,8 +50,8 @@ client.on('message', (topic, message) => {
             obj.carbonEmission = JSON.parse(obj.carbonEmission);
         });
         console.log('Received message from topic:', topic);
-        console.log('Message:', message);
-        axios.post(post_flight_url, message)
+        console.log('Message:', message[0]);
+        axios.post(post_flight_url, message[0])
             .then(response => {
                 console.log('Response:', response.data);
             })

@@ -12,7 +12,7 @@ const development = {
 const test = {
   username: process.env.DATABASE_USER || '',
   password: process.env.DATABASE_PASSWORD || null,
-  database: process.env.DATABASE_NAME || '',
+  database: process.env.DATABASE_NAME + '_test' || '',
   host: process.env.DATABASE_HOST || '',
   dialect: 'postgres',
 };
@@ -20,7 +20,7 @@ const test = {
 const production = {
   username: process.env.DATABASE_USER || '',
   password: process.env.DATABASE_PASSWORD || null,
-  database: process.env.DATABASE_NAME || '',
+  database: process.env.DATABASE_NAME + '_prod' || '',
   host: process.env.DATABASE_HOST || '',
   dialect: 'postgres',
 };

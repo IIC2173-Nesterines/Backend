@@ -33,7 +33,7 @@ module.exports = {
       airlineLogo: {
         type: Sequelize.STRING,
       },
-      carbonEmissions: {
+      carbonEmission: {
         type: Sequelize.INTEGER,
       },
       price: {
@@ -55,6 +55,7 @@ module.exports = {
       },
     });
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Flights');
   },

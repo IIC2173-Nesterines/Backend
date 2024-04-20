@@ -7,34 +7,35 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       flightId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       state: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       quantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Requests');
-  }
+  },
 };
