@@ -2,7 +2,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
   timestamps: true,
-  tableName: 'Airports',
+  tableName: 'airports',
   modelName: 'Airport',
 })
 class Airport extends Model {
