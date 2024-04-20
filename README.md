@@ -16,10 +16,11 @@ DATABASE_PASSWORD={password}
 DATABASE_PORT=5432
 DATABASE_NAME={db_name}
 DATABASE_HOST=localhost
+API_PORT=3001
 ```
 
 donde `{user}` y `{password}` son las credenciales de acceso a la base de datos, y `{db_name}` es el nombre de la base de datos. A continuación, se debe crear un usuario de postgres con el nombre de usuario y contraseña especificados, el cual a su vez debe tener una base de datos creada con el nombre especificado en el archivo `.env`.
-Para ejecutar el proyecto se debe asegurar que Postgres se esté corriendo. Para ejecutar Postgres se puede usar el comando `sudo service postgresql start`. Luego, en la consola de la API se debe ejecutar el comando `npm run start:dev` para correr la API en modo desarrollo. Al hacerlo, se migrará la base de datos de manera automática, creando las tablas necearias para ejecutar el proyecto. A menos que se especifique en el archivo `.env`, la API correrá en el puerto 3000.
+Para ejecutar el proyecto se debe asegurar que Postgres se esté corriendo. Para ejecutar Postgres se puede usar el comando `sudo service postgresql start`. Luego, en la consola de la API se debe ejecutar el comando `npm run start:dev` para correr la API en modo desarrollo. Al hacerlo, se migrará la base de datos de manera automática, creando las tablas necearias para ejecutar el proyecto. A menos que se especifique en el archivo `.env`, la API correrá en el puerto 3000, de modo que si se quiere correr la API con el frontend al mismo tiempo, se debe asegurar la consistencia entre los puertos de front y back, y los archivos `.env` correspondientes.
 
 
 En el directorio del Broker, se debe crear un archivo `.env` con las siguientes variables de entorno:
