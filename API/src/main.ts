@@ -21,7 +21,9 @@ async function bootstrap() {
   try {
     await sequelize.authenticate();
     console.log('Connection to database has been established successfully.');
-    console.log('API started on port 3001');
+    console.log(
+      'API is running on: http://localhost:' + (process.env.API_PORT || 3000),
+    );
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
