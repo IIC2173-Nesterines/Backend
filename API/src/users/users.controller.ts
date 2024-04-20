@@ -11,7 +11,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -43,7 +42,7 @@ export class UsersController {
 
   @Patch(':sessionId')
   @UseGuards(AuthGuard('jwt'))
-  update(@Param('sessionId') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('sessionId') id: string, @Body() updateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 

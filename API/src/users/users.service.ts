@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 import sequelize from '../db/config';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -31,7 +30,7 @@ export class UsersService {
     return await sequelize.models.Users.findOne({ where: { sessionId: id } });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto) {
     return sequelize.models.Users.update(updateUserDto, {
       where: {
         sessionId: id,
