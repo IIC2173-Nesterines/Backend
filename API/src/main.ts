@@ -11,7 +11,13 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  await app.listen(3001);
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+  await app.listen(process.env.API_PORT || 3000);
 
   try {
     await sequelize.authenticate();
