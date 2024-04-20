@@ -8,7 +8,7 @@ services: # The containers we are going to run
     volumes:
       - ./API/src:/api/src # To copy changes in the local machine to the container.
     ports:
-      - "3000:3000" # To expose the app to the machine localhost (machine-port:container:port)
+      - "${API_PORT}:${API_PORT}" # To expose the app to the machine localhost (machine-port:container:port)
     networks:
       - api-network # Connect the app to the network, in this case to use the database
     depends_on: # Build dependencies in case one containers needs another to be builded first
