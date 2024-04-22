@@ -49,49 +49,68 @@ export class RequestsService {
   }
 
   async createGroup(createGroupRequestDto: CreateGroupRequestDto) {
-    console.log('CreateRequestDto', createGroupRequestDto);
-    const date = new Date(createGroupRequestDto.datetime);
-    console.log('date', date);
-    const flight = await sequelize.models.Flight.findOne({
-      where: {
-        departureAirportId: createGroupRequestDto.departure_airport,
-        arrivalAirportId: createGroupRequestDto.arrival_airport,
-        // departureDate: date,
-      },
-    });
-    console.log('flight', flight);
-    if (!flight) {
-      return 'Flight not found';
-    }
-
-    let groupUser = await sequelize.models.Users.findOne({
-      where: {
-        sessionId: '000000000000000000' + createGroupRequestDto.group_id,
-      },
-    });
-
-    if (!groupUser) {
-      groupUser = await sequelize.models.Users.create({
-        email: createGroupRequestDto.group_id + '@group.com',
-        username: createGroupRequestDto.group_id,
-        sessionId: '000000000000000000' + createGroupRequestDto.group_id,
+    try {
+      console.log('CreateRequestDto', createGroupRequestDto);
+      // const airports = await sequelize.models.Airport.findAll();
+      // console.log('AIRPORTS: ', airports);
+      const departure_time = new Date(createGroupRequestDto.departure_time);
+      const departure_airport = await sequelize.models.Airport.findOne({
+        where: {
+          id: createGroupRequestDto.departure_airport,
+        },
       });
-    }
 
-    const request_data = {
-      userId: groupUser.dataValues.id,
-      flightId: flight.dataValues.id,
-      date: createGroupRequestDto.datetime,
-      state: 'pending',
-      quantity: createGroupRequestDto.quantity,
-      request_id: createGroupRequestDto.request_id,
-    };
-    if (flight.dataValues.quantity < createGroupRequestDto.quantity) {
-      return 'Not enough tickets';
+      const arrival_airport = await sequelize.models.Airport.findOne({
+        where: {
+          id: createGroupRequestDto.arrival_airport,
+        },
+      });
+      // console.log('departure_airport', departure_airport);
+      // console.log('arrival_airport', arrival_airport);
+      const flight = await sequelize.models.Flight.findOne({
+        where: {
+          departureAirportId: departure_airport.dataValues.id,
+          arrivalAirportId: arrival_airport.dataValues.id,
+          departureDate: departure_time,
+        },
+      });
+      // console.log('flight', flight);
+      if (!flight) {
+        return 'Flight not found';
+      }
+
+      let groupUser = await sequelize.models.Users.findOne({
+        where: {
+          sessionId: '000000000000000000' + createGroupRequestDto.group_id,
+        },
+      });
+
+      if (!groupUser) {
+        groupUser = await sequelize.models.Users.create({
+          email: createGroupRequestDto.group_id + '@group.com',
+          username: createGroupRequestDto.group_id,
+          sessionId: '000000000000000000' + createGroupRequestDto.group_id,
+        });
+      }
+
+      const request_data = {
+        userId: groupUser.dataValues.id,
+        flightId: flight.dataValues.id,
+        date: createGroupRequestDto.datetime,
+        state: 'pending',
+        quantity: createGroupRequestDto.quantity,
+        request_id: createGroupRequestDto.request_id,
+      };
+      if (flight.dataValues.quantity < createGroupRequestDto.quantity) {
+        return 'Not enough tickets';
+      }
+      const request = await sequelize.models.Request.create(request_data);
+      console.log('request', request);
+      return request;
+    } catch (err) {
+      console.log('Error', err);
+      return err;
     }
-    const request = await sequelize.models.Request.create(request_data);
-    console.log('request', request);
-    return request;
   }
   findAll() {
     return sequelize.models.Request.findAll();
@@ -130,12 +149,12 @@ export class RequestsService {
       flight.update({
         quantity: flight.dataValues.quantity - request.dataValues.quantity,
       });
-      const ticket = await sequelize.models.Tickets.create({
+      await sequelize.models.Tickets.create({
         userId: request.dataValues.userId,
         flightId: request.dataValues.flightId,
         quantity: request.dataValues.quantity,
       });
-      console.log('ticket', ticket);
+      // console.log('ticket', ticket);
     }
     console.log('Ticket updates successfully');
     return request;
