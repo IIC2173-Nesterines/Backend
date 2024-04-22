@@ -1,4 +1,4 @@
 #!/bin/sh
-sleep 10
+sleep 20
 echo "Starting Broker Sub"
 npm run dev

@@ -6,9 +6,11 @@ import {
 import { UpdateRequestDto } from './dto/update-request.dto';
 import sequelize from '../db/config';
 import { v4 as uuidv4 } from 'uuid';
+import { MqttService } from 'src/mqtt/mqtt.service';
 
 @Injectable()
 export class RequestsService {
+  constructor(private mqttService: MqttService) {}
   async create(createRequestDto: CreateRequestDto) {
     console.log('CreateRequestDto', createRequestDto);
     // const flight = await sequelize.models.Flight.findOne({
@@ -44,7 +46,22 @@ export class RequestsService {
       return 'Not enough tickets';
     }
     const request = await sequelize.models.Request.create(request_data);
-    console.log('request', request);
+    // console.log('request', request);
+    const data = {
+      request_id: request.dataValues.request_id,
+      group_id: '10',
+      departure_airport: flight.dataValues.departureAirportId,
+      datetime: flight.dataValues.departureDate,
+      departure_time: flight.dataValues.departureDate,
+      deposit_token: '',
+      seller: 0,
+      quantity: request.dataValues.quantity,
+    };
+    console.log('data', data);
+    this.mqttService.publishMessage(
+      process.env.MQTT_CHANNEL,
+      JSON.stringify(data),
+    );
     return request;
   }
 
