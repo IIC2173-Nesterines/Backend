@@ -11,7 +11,6 @@ class User extends Model {
     type: DataType.STRING,
     allowNull: false,
     unique: true,
-    primaryKey: true,
   })
   declare sessionId: string;
 

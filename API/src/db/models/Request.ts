@@ -52,6 +52,12 @@ class Request extends Model {
     allowNull: false,
   })
   declare quantity: number;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  declare request_id: string;
 }
 
 export default Request;
