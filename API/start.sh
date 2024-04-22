@@ -8,7 +8,7 @@ npm install
 export PGPASSWORD="$DATABASE_PASSWORD"
 
 # Check if the database exists
-if psql -h localhost -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; then
+if postgresql -h localhost -U "$DATABASE_USER" -d "$DATABASE_NAME" -c '\q' 2>/dev/null; then
     echo "Database '$DATABASE_NAME' exists."
 else
     echo "Database '$DATABASE_NAME' does not exist."
