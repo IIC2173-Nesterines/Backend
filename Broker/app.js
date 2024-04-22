@@ -2,11 +2,12 @@ require('dotenv').config();
 const fs = require('fs');
 const axios = require('axios');
 const mqtt = require('mqtt');
+const { parse } = require('url');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT;
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;
-const post_flight_url = process.env.API_URL;
+const API_URL = process.env.API_URL;
 
 
 const client = mqtt.connect({
@@ -51,7 +52,7 @@ client.on('message', (topic, message) => {
         });
         console.log('Received message from topic:', topic);
         console.log('Message:', message[0]);
-        axios.post(post_flight_url, message[0])
+        axios.post(API_URL + '/flights', message[0])
             .then(response => {
                 console.log('Response:', response.data);
             })
@@ -68,7 +69,35 @@ client.on('message', (topic, message) => {
         message = JSON.parse(message);
         console.log('Received message from topic:', topic);
         console.log('Message:', message);
-        // TODO: Send message to API
+        // message = {
+        //     requestId: message.requestId,
+        //     userId: message.userId
+        //     flights: JSON.stringify(message.flights),
+        //     carbonEmission: JSON.stringify(message.carbonEmission),
+        //     totalCarbonEmission: message.totalCarbonEmission,
+        //     totalCost: message.totalCost,
+        //     totalDistance: message.totalDistance,
+        //     totalDuration: message.totalDuration,
+        //     totalFlights: message.totalFlights,
+        //     totalPassengers: message.totalPassengers,
+        //     totalSeats: message.totalSeats,
+        //     totalWeight: message.totalWeight,
+        // }
+        try {
+            message.group_id = parseInt(message.group_id);
+        axios.post(API_URL + '/requests/groups', message)
+            .then(response => {
+                console.log('Response:', response.data);
+            })
+            .catch(error => {
+                // console.error('Error:', error);
+                console.log('AAAAAA Error:', error.response.status);
+                console.log('Error:', error.config.method, error.config.url, error.config.data);
+                console.log('Error:', error.response.data);
+            });
+        } catch {
+            console.log('Error:', error);
+        }
 
     } else if (topic === 'flights/validation') {
         message = message.toString();
@@ -80,7 +109,26 @@ client.on('message', (topic, message) => {
         message = JSON.parse(message);
         console.log('Received message from topic:', topic);
         console.log('Message:', message);
-        // TODO: Send message to API
+        console.log('Message:', message.valid);
+        console.log(message.valid==true);
+        message = {
+            state: message.valid ? 'approved' : 'rejected',
+            request_id: message.request_id,
+        }
+        try {
+        axios.put(API_URL + '/requests', message)
+            .then(response => {
+                console.log('Response:', response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                console.log('AAAAAA Error:', error.response.status);
+                console.log('Error:', error.config.method, error.config.url, error.config.data);
+                console.log('Error:', error.response.data);
+            });
+        } catch {
+            console.log('Error:', error);
+        }
     }
 });
 
