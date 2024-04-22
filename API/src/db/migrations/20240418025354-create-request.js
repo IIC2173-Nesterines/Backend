@@ -24,6 +24,9 @@ module.exports = {
       quantity: {
         type: Sequelize.INTEGER,
       },
+      request_id: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
