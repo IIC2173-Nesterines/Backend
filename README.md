@@ -34,3 +34,9 @@ API_URL=http://{api_host}:{api_port}/flights
 ```
 
 donde `{api_host}` y `{api_port}` deben coincidir con las variables determinadas en la configuración de entorno de la API. Luego, para ejecutar el broker, se debe usar el comando `npm run dev`. Si la API no está corriendo cuando se escucha algún mensaje de parte del broker, el broker informará un error a la hora de tratar de redirigir la información a la API.
+
+## Pipeline CI
+Se implementó un *pipeline* de CI muy simple para esta entrega, el cual fue desarrollado con Github Actions y ejecuta un chequeo de estilo de código con ESLint. El archivo de configuración del *pipeline* se encuentra en `.github/workflows/main.yml`.
+
+## Diagrama UML
+El diagrama UML de componentes de la aplicación se encuentra en el archivo `UML-E1.jpg`. En este se puede observar que se tomó como punto de partida el diagrama de la E0 y se agregaron los nuevos componentes. Estos son el *bucket* S3 de AWS, el servicio de autenticación y la API Gateway. El diagrama está estructurado de manera que el usuario solamente interactúa con el frontend alojado en la instancia S3 de AWS, a partir de la cual debe consumir los servicios de la API mediante la API Gateway, pero asegurando tener una conexión válida, la cual realiza mediante el servicio externo de Auth0, el cual a su vez debe validar los tokens con la API Gateway, la cual comprueba si el token es válido.
