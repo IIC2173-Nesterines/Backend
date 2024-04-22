@@ -42,6 +42,9 @@ export class RequestsService {
         sessionId: createRequestDto.session_id,
       },
     });
+    if (!user) {
+      return 'User not found';
+    }
     const date = new Date(createRequestDto.datetime);
     const request_data = {
       userId: user.dataValues.id,
