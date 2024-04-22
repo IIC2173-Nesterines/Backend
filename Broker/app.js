@@ -85,16 +85,16 @@ client.on('message', (topic, message) => {
         // }
         try {
             message.group_id = parseInt(message.group_id);
-        axios.post(API_URL + '/requests/groups', message)
-            .then(response => {
-                console.log('Response:', response.data);
-            })
-            .catch(error => {
-                // console.error('Error:', error);
-                console.log('AAAAAA Error:', error.response.status);
-                console.log('Error:', error.config.method, error.config.url, error.config.data);
-                console.log('Error:', error.response.data);
-            });
+            axios.post(API_URL + '/requests/groups', message)
+                .then(response => {
+                    console.log('Response:', response.data);
+                })
+                .catch(error => {
+                    // console.error('Error:', error);
+                    console.log('AAAAAA Error:', error.response.status);
+                    console.log('Error:', error.config.method, error.config.url, error.config.data);
+                    console.log('Error:', error.response.data);
+                });
         } catch {
             console.log('Error:', error);
         }

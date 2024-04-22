@@ -30,10 +30,11 @@ export class RequestsService {
         sessionId: createRequestDto.session_id,
       },
     });
+    const date = new Date(createRequestDto.datetime);
     const request_data = {
       userId: user.dataValues.id,
       flightId: flight.dataValues.id,
-      date: createRequestDto.datetime,
+      date: date,
       // datetime: createRequestDto.datetime,
       state: 'pending',
       quantity: createRequestDto.quantity,
@@ -49,26 +50,28 @@ export class RequestsService {
 
   async createGroup(createGroupRequestDto: CreateGroupRequestDto) {
     console.log('CreateRequestDto', createGroupRequestDto);
+    const date = new Date(createGroupRequestDto.datetime);
+    console.log('date', date);
     const flight = await sequelize.models.Flight.findOne({
       where: {
         departureAirportId: createGroupRequestDto.departure_airport,
         arrivalAirportId: createGroupRequestDto.arrival_airport,
-        departureDate: createGroupRequestDto.departure_time,
+        // departureDate: date,
       },
     });
+    console.log('flight', flight);
     if (!flight) {
       return 'Flight not found';
     }
-    console.log('flight', flight);
 
-    let groupUser = await sequelize.models.User.findOne({
+    let groupUser = await sequelize.models.Users.findOne({
       where: {
         sessionId: '000000000000000000' + createGroupRequestDto.group_id,
       },
     });
 
     if (!groupUser) {
-      groupUser = await sequelize.models.User.create({
+      groupUser = await sequelize.models.Users.create({
         email: createGroupRequestDto.group_id + '@group.com',
         username: createGroupRequestDto.group_id,
         sessionId: '000000000000000000' + createGroupRequestDto.group_id,
@@ -81,6 +84,7 @@ export class RequestsService {
       date: createGroupRequestDto.datetime,
       state: 'pending',
       quantity: createGroupRequestDto.quantity,
+      request_id: createGroupRequestDto.request_id,
     };
     if (flight.dataValues.quantity < createGroupRequestDto.quantity) {
       return 'Not enough tickets';
@@ -120,10 +124,13 @@ export class RequestsService {
           id: request.dataValues.flightId,
         },
       });
+      if (!flight) {
+        return 'Flight not found';
+      }
       flight.update({
         quantity: flight.dataValues.quantity - request.dataValues.quantity,
       });
-      const ticket = await sequelize.models.Ticket.create({
+      const ticket = await sequelize.models.Tickets.create({
         userId: request.dataValues.userId,
         flightId: request.dataValues.flightId,
         quantity: request.dataValues.quantity,
