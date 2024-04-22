@@ -28,6 +28,12 @@ export class TicketsService {
       where: {
         userId: user.dataValues.id,
       },
+      include: [
+        {
+          model: sequelize.models.Flight,
+          as: 'flight',
+        },
+      ],
     });
   }
 
