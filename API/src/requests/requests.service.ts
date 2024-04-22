@@ -88,7 +88,7 @@ export class RequestsService {
         where: {
           departureAirportId: departure_airport.dataValues.id,
           arrivalAirportId: arrival_airport.dataValues.id,
-          departureDate: departure_time,
+          // departureDate: departure_time,
         },
       });
       // console.log('flight', flight);
