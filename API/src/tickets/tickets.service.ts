@@ -6,6 +6,7 @@ import sequelize from '../db/config';
 @Injectable()
 export class TicketsService {
   create(createTicketDto: CreateTicketDto) {
+    console.log('createTicketDto', createTicketDto);
     return 'This action adds a new ticket';
   }
 
@@ -34,6 +35,7 @@ export class TicketsService {
   }
 
   update(id: number, updateTicketDto: UpdateTicketDto) {
+    console.log('updateTicketDto', updateTicketDto);
     return `This action updates a #${id} ticket`;
   }
 

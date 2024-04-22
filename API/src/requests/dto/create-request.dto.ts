@@ -4,29 +4,40 @@ export class CreateRequestDto {
   // @IsString()
   // 'request_id': string;
 
+  // @IsNumber()
+  // 'user_id': number; // puede ser un numero de grupo si es así tiene que ser un munero negativo
+
+  // @IsString()
+  // 'departure_airport': string;
+
+  // @IsString()
+  // 'arrival_airport': string;
+
+  // @IsString()
+  // 'departure_time': string;
+
+  // @IsString()
+  // 'datetime': string;
+
+  // @IsString()
+  // 'deposit_token': string;
+
+  // @IsNumber()
+  // 'quantity': number;
+
+  // @IsNumber()
+  // 'seller': 0;
+  @IsString()
+  'session_id': string;
+
   @IsNumber()
-  'user_id': number; // puede ser un numero de grupo si es así tiene que ser un munero negativo
-
-  @IsString()
-  'departure_airport': string;
-
-  @IsString()
-  'arrival_airport': string;
-
-  @IsString()
-  'departure_time': string;
-
-  @IsString()
-  'datetime': string;
-
-  @IsString()
-  'deposit_token': string;
+  'flight_id': number;
 
   @IsNumber()
   'quantity': number;
 
-  @IsNumber()
-  'seller': 0;
+  @IsString()
+  'datetime': string;
 }
 
 export class CreateGroupRequestDto {

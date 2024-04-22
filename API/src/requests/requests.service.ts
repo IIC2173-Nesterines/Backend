@@ -11,22 +11,30 @@ import { v4 as uuidv4 } from 'uuid';
 export class RequestsService {
   async create(createRequestDto: CreateRequestDto) {
     console.log('CreateRequestDto', createRequestDto);
-    const flight = await sequelize.models.Flight.findOne({
-      where: {
-        departureAirportId: createRequestDto.departure_airport,
-        arrivalAirportId: createRequestDto.arrival_airport,
-        departureDate: createRequestDto.departure_time,
-      },
-    });
+    // const flight = await sequelize.models.Flight.findOne({
+    //   where: {
+    //     departureAirportId: createRequestDto.departure_airport,
+    //     arrivalAirportId: createRequestDto.arrival_airport,
+    //     departureDate: createRequestDto.departure_time,
+    //   },
+    // });
+    const flight = await sequelize.models.Flight.findByPk(
+      createRequestDto.flight_id,
+    );
     if (!flight) {
       return 'Flight not found';
     }
     console.log('flight', flight);
-
+    const user = await sequelize.models.Users.findOne({
+      where: {
+        sessionId: createRequestDto.session_id,
+      },
+    });
     const request_data = {
-      userId: createRequestDto.user_id,
+      userId: user.dataValues.id,
       flightId: flight.dataValues.id,
       date: createRequestDto.datetime,
+      // datetime: createRequestDto.datetime,
       state: 'pending',
       quantity: createRequestDto.quantity,
       request_id: uuidv4(),
