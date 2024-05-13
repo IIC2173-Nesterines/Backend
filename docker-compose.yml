@@ -28,7 +28,6 @@ services: # The containers we are going to run
       - api-network # Connect the app to the network, in this case to use the database
     depends_on: # Build dependencies in case one containers needs another to be builded first
       - db # To build after the database
-
   db: # The database service
     image: postgres # Using the oficial dockerhub image
     container_name: postgres
@@ -43,6 +42,56 @@ services: # The containers we are going to run
       # To persist the data in the database we have a volume that persist after container deletion
       # and copy the files from the container to the volume.
       - db-volume:/var/lib/postgresql/data 
+  redis-broker:
+    image: redis:7
+    volumes:
+      - ./Workers/redis/redis.conf:/usr/local/etc/redis/redis.conf
+  producer:
+    build:
+      context: ./Workers/project/
+      dockerfile: Dockerfile
+    command: uvicorn producer:app --reload --host 0.0.0.0 --port ${REDIS_PORT}
+    volumes:
+      - ./Workers/project:/opt/
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    environment:
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    depends_on:
+      - redis-broker
+  consumer:
+    build:
+      context: ./Workers/project
+      dockerfile: Dockerfile
+    deploy:
+      replicas: 2
+    command: celery -A consumer.celery_app worker --loglevel=INFO --purge --concurrency=1
+    volumes:
+      - ./Workers/project:/opt/
+    depends_on:
+      - producer
+    environment:
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+  worker-dashboard:
+    build:
+      context: ./Workers/project
+      dockerfile: Dockerfile
+    command: bash -c "sleep 10; celery -A consumer.celery_app flower --loglevel=INFO --url_prefix=dashboard;"
+    expose:
+      - ${FLOWER_PORT}
+    ports:
+      - '${FLOWER_PORT}:${FLOWER_PORT}'
+    volumes:
+      - ./Workers/project:/opt/
+    depends_on:
+      - consumer
+    environment:
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
 
 networks: # All the networks that connects our containers
   api-network:
