@@ -10,6 +10,6 @@ import time
 # need the instance of the Celery app.
 # @celery_app.task()
 @shared_task
-def calculate_recommendations(number):
-    result = calculate_recommendations(number)
+def get_recommendations(flights, ip_coord):
+    result = calculate_recommendations(flights, ip_coord)
     return result
