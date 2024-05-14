@@ -44,4 +44,9 @@ export class TicketsController {
   remove(@Param('id') id: number) {
     return this.ticketsService.remove(id);
   }
+
+  @Get('/last/:sessionId')
+  async getLastBoughtTicket(@Param('sessionId') sessionId: string) {
+    return await this.ticketsService.getLastBoughtTicket(sessionId);
+  }
 }
