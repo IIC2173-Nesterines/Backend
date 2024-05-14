@@ -11,6 +11,7 @@ import {
 import { FlightsService } from './flights.service';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
+import { UpcomingFlightsDto } from './dto/upcoming-flights.dto';
 
 @Controller('flights')
 export class FlightsController {
@@ -45,5 +46,12 @@ export class FlightsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.flightsService.remove(+id);
+  }
+
+  @Post('upcoming')
+  async getUpcomingFlights(@Body() params: UpcomingFlightsDto) {
+    const { purchaseDate, destinationAirportId } = params;
+    const purchaseDateObj = new Date(purchaseDate);
+    return this.flightsService.findUpcomingFlights(purchaseDateObj, destinationAirportId);
   }
 }
