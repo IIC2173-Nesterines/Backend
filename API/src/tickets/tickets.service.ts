@@ -15,7 +15,8 @@ export class TicketsService {
   }
 
   async findBySessionId(sessionId: string) {
-    const user = await sequelize.models.User.findOne({
+    console.log('sessionId', sessionId);
+    const user = await sequelize.models.Users.findOne({
       where: {
         sessionId: sessionId,
       },
@@ -23,10 +24,16 @@ export class TicketsService {
     if (!user) {
       return 'User not found';
     }
-    return sequelize.models.Ticket.findAll({
+    return sequelize.models.Tickets.findAll({
       where: {
         userId: user.dataValues.id,
       },
+      include: [
+        {
+          model: sequelize.models.Flight,
+          as: 'flight',
+        },
+      ],
     });
   }
 

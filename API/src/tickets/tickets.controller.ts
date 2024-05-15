@@ -26,7 +26,7 @@ export class TicketsController {
   }
 
   @Get('/user/:sessionId')
-  findByUserId(@Param('userId') sessionId: string) {
+  findByUserId(@Param('sessionId') sessionId: string) {
     return this.ticketsService.findBySessionId(sessionId);
   }
 
