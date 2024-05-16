@@ -66,7 +66,7 @@ export class TicketsService {
     if (!user) {
       return 'User not found';
     }
-    const ticket =  await sequelize.models.Tickets.findOne({
+    const ticket = await sequelize.models.Tickets.findOne({
       where: {
         userId: user.dataValues.id,
       },
@@ -83,10 +83,11 @@ export class TicketsService {
 
     const result = {
       id: ticket.getDataValue('id'),
-      arrivalAirportId: ticket.getDataValue('flight').getDataValue('arrivalAirportId'),
+      arrivalAirportId: ticket
+        .getDataValue('flight')
+        .getDataValue('arrivalAirportId'),
     };
-  
+
     return result;
   }
-
 }

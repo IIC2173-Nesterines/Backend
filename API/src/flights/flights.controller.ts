@@ -52,6 +52,9 @@ export class FlightsController {
   async getUpcomingFlights(@Body() params: UpcomingFlightsDto) {
     const { purchaseDate, destinationAirportId } = params;
     const purchaseDateObj = new Date(purchaseDate);
-    return this.flightsService.findUpcomingFlights(purchaseDateObj, destinationAirportId);
+    return this.flightsService.findUpcomingFlights(
+      purchaseDateObj,
+      destinationAirportId,
+    );
   }
 }
