@@ -18,7 +18,7 @@ import sequelize from './db/config';
     ConfigModule.forRoot(),
     RequestsModule,
     TicketsModule,
-    TransactionsModule
+    TransactionsModule,
   ],
 })
 export class AppModule {}

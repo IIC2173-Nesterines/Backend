@@ -8,7 +8,8 @@ export class TransactionsService {
   async create(createTransactionDto: CreateTransactionDto) {
     const { buy_order, session_id, amount, return_url } = createTransactionDto;
     const apiKeyId = '597055555532';
-    const apiKeySecret = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
+    const apiKeySecret =
+      '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
 
     const headers = {
       'Tbk-Api-Key-Id': apiKeyId,
@@ -27,12 +28,15 @@ export class TransactionsService {
       const response = await axios.post(
         'https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions',
         data,
-        { headers }
+        { headers },
       );
 
       return response.data;
     } catch (error) {
-      console.error('Error creating transaction:', error.response ? error.response.data : error.message);
+      console.error(
+        'Error creating transaction:',
+        error.response ? error.response.data : error.message,
+      );
       throw new Error('Error creating transaction');
     }
   }
@@ -43,28 +47,33 @@ export class TransactionsService {
 
   async findOne(token: string) {
     const apiKeyId = '597055555532';
-    const apiKeySecret = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
+    const apiKeySecret =
+      '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
 
     const headers = {
       'Tbk-Api-Key-Id': apiKeyId,
       'Tbk-Api-Key-Secret': apiKeySecret,
       'Content-Type': 'application/json',
     };
-    console.log(token)
+    console.log(token);
     try {
       const response = await axios.put(
         `https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/${token}`,
         {},
-        { headers }
+        { headers },
       );
 
       return response.data;
     } catch (error) {
-      console.error('Error getting transaction:', error.response ? error.response.data : error.message);
+      console.error(
+        'Error getting transaction:',
+        error.response ? error.response.data : error.message,
+      );
       throw new Error('Error getting transaction');
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateTransactionDto: UpdateTransactionDto) {
     return `This action updates a #${id} transaction`;
   }
