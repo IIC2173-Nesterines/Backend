@@ -59,7 +59,6 @@ export class RequestsService {
       return 'Not enough tickets';
     }
     const request = await sequelize.models.Request.create(request_data);
-    // console.log('request', request);
     const data = {
       request_id: request.dataValues.request_id,
       group_id: '10',
@@ -67,7 +66,7 @@ export class RequestsService {
       datetime: formatDate(flight.dataValues.departureDate),
       departure_time: formatDate(flight.dataValues.departureDate),
       arrival_airport: flight.dataValues.arrivalAirportId,
-      deposit_token: '',
+      deposit_token: createRequestDto.deposit_token,
       seller: 0,
       quantity: request.dataValues.quantity,
     };

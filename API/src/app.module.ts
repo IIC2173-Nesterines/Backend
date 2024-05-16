@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { FlightsModule } from './flights/flights.module';
 import { RequestsModule } from './requests/requests.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { TransactionsModule } from './transactions/transactions.module';
 import sequelize from './db/config';
 
 @Module({
@@ -17,6 +18,7 @@ import sequelize from './db/config';
     ConfigModule.forRoot(),
     RequestsModule,
     TicketsModule,
+    TransactionsModule
   ],
 })
 export class AppModule {}
