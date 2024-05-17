@@ -6,8 +6,20 @@ from fastapi import FastAPI
 # celery
 from celery_config.tasks import get_recommendations
 from models import ListOfFlights, Coordinates
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[origins],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
 
 @app.get("/heartbeat")
 def check_service():

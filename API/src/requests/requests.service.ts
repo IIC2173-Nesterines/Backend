@@ -7,6 +7,8 @@ import { UpdateRequestDto } from './dto/update-request.dto';
 import sequelize from '../db/config';
 import { v4 as uuidv4 } from 'uuid';
 import { MqttService } from 'src/mqtt/mqtt.service';
+import { CreateRecommendationsDto } from './dto/create-recommendations.dto';
+import axios from 'axios';
 
 function formatDate(date: Date): string {
   const year = date.getFullYear();
@@ -193,5 +195,43 @@ export class RequestsService {
 
   remove(id: number) {
     return `This action removes a #${id} request`;
+  }
+
+  async createRecommendations(
+    createRecommendationsDto: CreateRecommendationsDto,
+  ) {
+    try {
+      const { flights, ip_coord } = createRecommendationsDto;
+      const work = await axios.post('http://localhost:8000/job', {
+        flights,
+        ip_coord,
+      });
+
+      return work.data;
+    } catch (err) {
+      console.log('Error', err);
+      return err;
+    }
+  }
+
+  async getRecommendationsStatus() {
+    try {
+      const status = await axios.get('http://localhost:8000/heartbeat');
+      return status.data;
+    } catch (err) {
+      console.error('Error connecting to server:', err.message);
+      console.error('Full error:', err);
+      return false;
+    }
+  }
+
+  async getRecommendationStatus(id: string) {
+    try {
+      const job = await axios.get(`http://localhost:8000/job/${id}`);
+      return job.data;
+    } catch (err) {
+      console.log('Error', err);
+      return err;
+    }
   }
 }
