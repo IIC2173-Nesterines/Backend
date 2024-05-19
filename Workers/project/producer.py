@@ -1,11 +1,13 @@
 import os
+from datetime import datetime
 
 # FastAPI
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import ValidationError
 
 # celery
 from celery_config.tasks import get_recommendations
-from models import ListOfFlights, Coordinates
+from models import CreateRecommendationsDto
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -26,18 +28,40 @@ def check_service():
     return True
 
 @app.post("/job")
-def post_publish_job(flights: ListOfFlights, ip_coord: Coordinates):
-    job = get_recommendations.delay(flights, ip_coord)
-    return {
-        "message": "new recommendation", 
-        "job_id": job.id,
-    }
+def post_publish_job(data: CreateRecommendationsDto):
+    try:
+        flights = [flight.dict() for flight in data.flights]
+        ip_coord = data.ip_coord.dict()
+        
+        
+        job = get_recommendations.delay(flights, ip_coord)
+        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        return {
+            "message": "new recommendation", 
+            "job_id": job.id,
+            "date": current_date
+        }
+    except ValidationError as e:
+        print("Validation Error:", e)
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print("Internal Server Error:", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/job/{job_id}")
 def get_job(job_id: str):
-    job = get_recommendations.AsyncResult(job_id)
-    print(job)
-    return {
-        "ready": job.ready(),
-        "result": job.result,
-    }
+    try:
+        job = get_recommendations.AsyncResult(job_id)
+
+        # Debugging print
+        print("Job result:", job)
+        
+        return {
+            "ready": job.ready(),
+            "result": job.result,
+        }
+    except Exception as e:
+        print("Internal Server Error:", e)
+        raise HTTPException(status_code=500, detail=str(e))

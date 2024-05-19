@@ -1,11 +1,17 @@
-import { IsInt, IsArray, ValidateNested, IsObject } from 'class-validator';
+import {
+  IsInt,
+  IsArray,
+  ValidateNested,
+  IsObject,
+  IsNumber,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class Coordinates {
-  @IsInt()
+  @IsNumber()
   lat: number;
 
-  @IsInt()
+  @IsNumber()
   lon: number;
 }
 

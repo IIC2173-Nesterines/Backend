@@ -60,11 +60,15 @@ export class RequestsController {
     return this.requestsService.remove(+id);
   }
 
-  @Post('/recommendations')
+  @Post('/recommendations/:id')
   createRecommendations(
     @Body() createRecommendationsDto: CreateRecommendationsDto,
+    @Param('id') id: string,
   ) {
-    return this.requestsService.createRecommendations(createRecommendationsDto);
+    return this.requestsService.createRecommendations(
+      createRecommendationsDto,
+      id,
+    );
   }
 
   @Get('/recommendations/:id')

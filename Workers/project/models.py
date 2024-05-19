@@ -13,5 +13,6 @@ class Flight(BaseModel):
     flight_id: int
     price: int
 
-class ListOfFlights(BaseModel):
+class CreateRecommendationsDto(BaseModel):
     flights: List[Flight]
+    ip_coord: Coordinates

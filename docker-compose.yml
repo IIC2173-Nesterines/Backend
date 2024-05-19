@@ -46,6 +46,8 @@ services: # The containers we are going to run
     image: redis:7
     volumes:
       - ./Workers/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - api-network
   producer:
     build:
       context: ./Workers/project/
@@ -55,6 +57,8 @@ services: # The containers we are going to run
       - ./Workers/project:/opt/
     expose:
       - ${REDIS_PORT}
+    networks:
+      - api-network
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
     environment:
@@ -69,6 +73,8 @@ services: # The containers we are going to run
     deploy:
       replicas: 2
     command: celery -A consumer.celery_app worker --loglevel=INFO --purge --concurrency=1
+    networks:
+      - api-network
     volumes:
       - ./Workers/project:/opt/
     depends_on:
@@ -89,6 +95,8 @@ services: # The containers we are going to run
       - ./Workers/project:/opt/
     depends_on:
       - consumer
+    networks:
+      - api-network
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}

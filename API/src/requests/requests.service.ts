@@ -199,13 +199,25 @@ export class RequestsService {
 
   async createRecommendations(
     createRecommendationsDto: CreateRecommendationsDto,
+    id: string,
   ) {
     try {
       const { flights, ip_coord } = createRecommendationsDto;
-      const work = await axios.post('http://localhost:8000/job', {
+      const work = await axios.post('http://producer:8000/job', {
         flights,
         ip_coord,
       });
+      await sequelize.models.Users.update(
+        {
+          recommendationsId: work.data.job_id,
+          recommendationsDate: work.data.date,
+        },
+        {
+          where: {
+            sessionId: id,
+          },
+        },
+      );
 
       return work.data;
     } catch (err) {
@@ -216,7 +228,7 @@ export class RequestsService {
 
   async getRecommendationsStatus() {
     try {
-      const status = await axios.get('http://localhost:8000/heartbeat');
+      const status = await axios.get('http://producer:8000/heartbeat');
       return status.data;
     } catch (err) {
       console.error('Error connecting to server:', err.message);
@@ -227,8 +239,15 @@ export class RequestsService {
 
   async getRecommendationStatus(id: string) {
     try {
-      const job = await axios.get(`http://localhost:8000/job/${id}`);
-      return job.data;
+      const job = await axios.get(`http://producer:8000/job/${id}`);
+      if (job.data.result != null) {
+        return job.data;
+      } else {
+        return {
+          ready: 'pending',
+          result: [],
+        };
+      }
     } catch (err) {
       console.log('Error', err);
       return err;
