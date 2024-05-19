@@ -26,7 +26,7 @@ export class TicketsController {
   }
 
   @Get('/user/:sessionId')
-  findByUserId(@Param('userId') sessionId: string) {
+  findByUserId(@Param('sessionId') sessionId: string) {
     return this.ticketsService.findBySessionId(sessionId);
   }
 
@@ -43,5 +43,10 @@ export class TicketsController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.ticketsService.remove(id);
+  }
+
+  @Get('/last/:sessionId')
+  async getLastBoughtTicket(@Param('sessionId') sessionId: string) {
+    return await this.ticketsService.getLastBoughtTicket(sessionId);
   }
 }

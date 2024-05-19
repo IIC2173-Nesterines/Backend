@@ -30,6 +30,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      recommendationsId: {
+        allowNull: true,
+        defaultValue: 'not set',
+        type: Sequelize.STRING,
+      },
+      recommendationsDate: {
+        allowNull: true,
+        defaultValue: 'not set',
+        type: Sequelize.STRING,
+      },
     });
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

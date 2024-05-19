@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import sequelize from '../db/config';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CreateRecommendationsDto } from './dto/create-recommendations.dto';
 
 @Injectable()
 export class UsersService {
@@ -43,6 +44,27 @@ export class UsersService {
       where: {
         sessionId: id,
       },
+    });
+  }
+
+  async createRecommendations(recommendations: CreateRecommendationsDto) {
+    return sequelize.models.Users.update(
+      {
+        recommendationsId: recommendations.recommendationsId,
+        recommendationsDate: recommendations.date,
+      },
+      {
+        where: {
+          sessionId: recommendations.sessionId,
+        },
+      },
+    );
+  }
+
+  async findRecommendations(sessionId: string) {
+    return await sequelize.models.Users.findOne({
+      where: { sessionId: sessionId },
+      attributes: ['recommendationsId', 'recommendationsDate'],
     });
   }
 }
