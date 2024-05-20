@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import axios from 'axios';
+import { MqttService } from 'src/mqtt/mqtt.service';
+import sequelize from '../db/config';
 
 @Injectable()
 export class TransactionsService {
+  constructor(private mqttService: MqttService) {}
   async create(createTransactionDto: CreateTransactionDto) {
     const { buy_order, session_id, amount, return_url } = createTransactionDto;
     const apiKeyId = '597055555532';
@@ -80,5 +83,28 @@ export class TransactionsService {
 
   remove(id: number) {
     return `This action removes a #${id} transaction`;
+  }
+
+  validate(valid: boolean, request_id: string) {
+    const data = {
+      request_id: request_id,
+      group_id: '10',
+      seller: 0,
+      valid: valid,
+    };
+    this.mqttService.publishMessage(
+      `${process.env.MQTT_CHANNEL}/validation`,
+      JSON.stringify(data),
+    );
+    return 'Validation sent';
+  }
+
+  async findTransactionByRequestId(transaction_id: string) {
+    return await sequelize.models.Request.findOne({
+      where: {
+        transaction_token: transaction_id,
+      },
+      attributes: ['request_id'],
+    });
   }
 }

@@ -58,6 +58,12 @@ class Request extends Model {
     allowNull: false,
   })
   declare request_id: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare transaction_token: string;
 }
 
 export default Request;
