@@ -24,21 +24,12 @@ function formatDate(date: Date): string {
 export class RequestsService {
   constructor(private mqttService: MqttService) {}
   async create(createRequestDto: CreateRequestDto) {
-    console.log('CreateRequestDto', createRequestDto);
-    // const flight = await sequelize.models.Flight.findOne({
-    //   where: {
-    //     departureAirportId: createRequestDto.departure_airport,
-    //     arrivalAirportId: createRequestDto.arrival_airport,
-    //     departureDate: createRequestDto.departure_time,
-    //   },
-    // });
     const flight = await sequelize.models.Flight.findByPk(
       createRequestDto.flight_id,
     );
     if (!flight) {
       return 'Flight not found';
     }
-    console.log('flight', flight);
     const user = await sequelize.models.Users.findOne({
       where: {
         sessionId: createRequestDto.session_id,
@@ -61,7 +52,6 @@ export class RequestsService {
       return 'Not enough tickets';
     }
     const request = await sequelize.models.Request.create(request_data);
-    // console.log('request', request);
     const data = {
       request_id: request.dataValues.request_id,
       group_id: '10',
@@ -69,13 +59,22 @@ export class RequestsService {
       datetime: formatDate(flight.dataValues.departureDate),
       departure_time: formatDate(flight.dataValues.departureDate),
       arrival_airport: flight.dataValues.arrivalAirportId,
-      deposit_token: '',
+      deposit_token: createRequestDto.deposit_token,
       seller: 0,
       quantity: request.dataValues.quantity,
     };
-    console.log('data', data);
+    await sequelize.models.Request.update(
+      {
+        transaction_token: createRequestDto.deposit_token,
+      },
+      {
+        where: {
+          request_id: request.dataValues.request_id,
+        },
+      },
+    );
     this.mqttService.publishMessage(
-      process.env.MQTT_CHANNEL,
+      `${process.env.MQTT_CHANNEL}/requests`,
       JSON.stringify(data),
     );
     return request;

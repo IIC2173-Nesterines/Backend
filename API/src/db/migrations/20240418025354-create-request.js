@@ -27,6 +27,10 @@ module.exports = {
       request_id: {
         type: Sequelize.STRING,
       },
+      transaction_token: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

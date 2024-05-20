@@ -46,7 +46,6 @@ export class RequestsController {
   }
   @Put()
   update_state(@Body() updateRequestDto: UpdateRequestDto) {
-    console.log('updateRequestDto AAAAAAA', updateRequestDto);
     return this.requestsService.update_state(updateRequestDto);
   }
 
