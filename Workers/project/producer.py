@@ -1,5 +1,6 @@
 import os
-from datetime import datetime
+import datetime as dt
+import pytz
 
 # FastAPI
 from fastapi import FastAPI, HTTPException
@@ -33,9 +34,9 @@ def post_publish_job(data: CreateRecommendationsDto):
         flights = [flight.dict() for flight in data.flights]
         ip_coord = data.ip_coord.dict()
         
-        
+        tz_Santiago = pytz.timezone('America/Santiago')
         job = get_recommendations.delay(flights, ip_coord)
-        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_date = dt.datetime.now(tz_Santiago).strftime('%d-%m-%Y %H:%M:%S')
 
         return {
             "message": "new recommendation", 
@@ -54,9 +55,6 @@ def post_publish_job(data: CreateRecommendationsDto):
 def get_job(job_id: str):
     try:
         job = get_recommendations.AsyncResult(job_id)
-
-        # Debugging print
-        print("Job result:", job)
         
         return {
             "ready": job.ready(),
