@@ -36,7 +36,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REGISTRY_ALIAS: r9l6i0a8
           REPOSITORY: arquisisters
-          IMAGE_TAG: latest
+          IMAGE_TAG: api-latest
         run: |
           cd API
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
