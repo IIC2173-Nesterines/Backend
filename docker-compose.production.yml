@@ -1,0 +1,5 @@
+# version: '3'
+# services:
+#   api:
+#     image: public.ecr.aws/r9l6i0a8/arquisisters:api-latest
+#     ports:
