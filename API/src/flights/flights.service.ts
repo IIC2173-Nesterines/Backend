@@ -84,6 +84,7 @@ export class FlightsService {
         },
       },
       order: [['departureDate', 'ASC']],
+      attributes: ['id', 'price', 'arrivalAirportId'],
       limit: 20,
     });
   }

@@ -70,20 +70,6 @@ client.on('message', (topic, message) => {
             message = JSON.parse(message);
             console.log('Received message from topic:', topic);
             console.log('Message:', message);
-            // message = {
-            //     requestId: message.requestId,
-            //     userId: message.userId
-            //     flights: JSON.stringify(message.flights),
-            //     carbonEmission: JSON.stringify(message.carbonEmission),
-            //     totalCarbonEmission: message.totalCarbonEmission,
-            //     totalCost: message.totalCost,
-            //     totalDistance: message.totalDistance,
-            //     totalDuration: message.totalDuration,
-            //     totalFlights: message.totalFlights,
-            //     totalPassengers: message.totalPassengers,
-            //     totalSeats: message.totalSeats,
-            //     totalWeight: message.totalWeight,
-            // }
             try {
                 message.group_id = parseInt(message.group_id);
                 axios.post(API_URL + '/requests/groups', message)
@@ -91,10 +77,7 @@ client.on('message', (topic, message) => {
                         console.log('Response:', response.data);
                     })
                     .catch(error => {
-                        // console.error('Error:', error);
-                        console.log('AAAAAA Error:', error.response.status);
-                        console.log('Error:', error.config.method, error.config.url, error.config.data);
-                        console.log('Error:', error.response.data);
+                        console.error('Error:', error);
                     });
             } catch {
                 console.log('Error:', error);
@@ -123,9 +106,6 @@ client.on('message', (topic, message) => {
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    console.log('AAAAAA Error:', error.response.status);
-                    console.log('Error:', error.config.method, error.config.url, error.config.data);
-                    console.log('Error:', error.response.data);
                 });
             } catch {
                 console.log('Error:', error);

@@ -13,7 +13,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateRecommendationsDto } from './dto/create-recommendations.dto';
 
 @Controller('users')
 export class UsersController {
@@ -50,13 +49,6 @@ export class UsersController {
   @Delete(':sessionId')
   remove(@Param('sessionId') id: string) {
     return this.usersService.remove(id);
-  }
-
-  @Post('/recommendations')
-  createRecommendations(
-    @Body() createRecommendationsDto: CreateRecommendationsDto,
-  ) {
-    return this.usersService.createRecommendations(createRecommendationsDto);
   }
 
   @Get('/recommendations/:sessionId')

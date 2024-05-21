@@ -19,8 +19,8 @@ export class CreateRequestDto {
   // @IsString()
   // 'datetime': string;
 
-  // @IsString()
-  // 'deposit_token': string;
+  @IsString()
+  'deposit_token': string;
 
   // @IsNumber()
   // 'quantity': number;
