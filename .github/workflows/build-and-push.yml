@@ -100,7 +100,7 @@ jobs:
         run: |
           deploymentId=$(aws deploy create-deployment --application-name \
           CodeDeployNesterinesApp --deployment-group-name CodeDeployNesterinesGroup --region us-east-1 \
-          --s3-location bucket=nesterines-code-deploy,key=deploy.zip,bundleType=zip --file-exists-behavior OVERWRITE \
+          --s3-location bucket=nesterines-code-deploy,key=deploy.zip,bundleType=zip \
           --description "Automatic deployment from githubactions commit ${{github.sha}}" | jq -r '.deploymentId')
           echo "DeploymentId=$deploymentId" >> $GITHUB_OUTPUT
       
