@@ -31,13 +31,38 @@ jobs:
           registry-type: public
           mask-password: "true"
 
-      - name: Build, tag and push docker image to Amazon ECR Public
+      - name: Build, tag and push API image to Amazon ECR Public
         env:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REGISTRY_ALIAS: r9l6i0a8
           REPOSITORY: arquisisters
-          IMAGE_TAG: api-latest
+          API_TAG: api-latest
+          PRODUCER_TAG: producer-latest
+          CONSUMER_TAG: consumer-latest
+          WORKER_DASHBOARD_TAG: worker-dashboard-latest
+          BROKER_TAG: broker-latest
+          # Variables de entorno:
+          DATABASE_USER: ${{secrets.DATABASE_USER}}
+          DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          CELERY_BROKER_URL: ${{secrets.CELERY_BROKER_URL}}
+          CELERY_RESULT_BACKEND: ${{secrets.CELERY_RESULT_BACKEND}}
+          REDIS_PORT: ${{secrets.REDIS_PORT}}
+          FLOWER_PORT: ${{secrets.FLOWER_PORT}}
+          API_PORT: ${{secrets.API_PORT}}
+
         run: |
-          cd API
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          docker compose build
+          docker tag backend-producer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
+          docker tag backend-consumer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
+          docker tag backend-worker-dashboard:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$WORKER_DASHBOARD_TAG
+          docker tag backend-broker:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
+          docker tag backend-api:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG 
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$WORKER_DASHBOARD_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG
+          
