@@ -28,6 +28,20 @@ class User extends Model {
   })
   declare username: string;
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    defaultValue: 'not set',
+  })
+  declare recommendationsDate: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    defaultValue: 'not set',
+  })
+  declare recommendationsId: string;
+
   @HasMany(() => Request)
   declare requests: Request[];
 }

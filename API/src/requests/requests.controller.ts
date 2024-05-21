@@ -14,10 +14,16 @@ import {
   CreateGroupRequestDto,
 } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { CreateRecommendationsDto } from './dto/create-recommendations.dto';
 
 @Controller('requests')
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
+
+  @Get('/recommendations')
+  getRecommendationsStatus() {
+    return this.requestsService.getRecommendationsStatus();
+  }
 
   @Post()
   create(@Body() createRequestDto: CreateRequestDto) {
@@ -40,9 +46,9 @@ export class RequestsController {
   }
   @Put()
   update_state(@Body() updateRequestDto: UpdateRequestDto) {
-    console.log('updateRequestDto AAAAAAA', updateRequestDto);
     return this.requestsService.update_state(updateRequestDto);
   }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto) {
     return this.requestsService.update(+id, updateRequestDto);
@@ -51,5 +57,21 @@ export class RequestsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.requestsService.remove(+id);
+  }
+
+  @Post('/recommendations/:id')
+  createRecommendations(
+    @Body() createRecommendationsDto: CreateRecommendationsDto,
+    @Param('id') id: string,
+  ) {
+    return this.requestsService.createRecommendations(
+      createRecommendationsDto,
+      id,
+    );
+  }
+
+  @Get('/recommendations/:id')
+  getRecommendationStatus(@Param('id') id: string) {
+    return this.requestsService.getRecommendationStatus(id);
   }
 }

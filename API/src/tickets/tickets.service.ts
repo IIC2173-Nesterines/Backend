@@ -11,7 +11,14 @@ export class TicketsService {
   }
 
   findAll() {
-    return `This action returns all tickets`;
+    return sequelize.models.Tickets.findAll({
+      include: [
+        {
+          model: sequelize.models.Flight,
+          as: 'flight',
+        },
+      ],
+    });
   }
 
   async findBySessionId(sessionId: string) {
@@ -48,5 +55,39 @@ export class TicketsService {
 
   remove(id: number) {
     return `This action removes a #${id} ticket`;
+  }
+
+  async getLastBoughtTicket(sessionId: string) {
+    const user = await sequelize.models.Users.findOne({
+      where: {
+        sessionId: sessionId,
+      },
+    });
+    if (!user) {
+      return 'User not found';
+    }
+    const ticket = await sequelize.models.Tickets.findOne({
+      where: {
+        userId: user.dataValues.id,
+      },
+      order: [['createdAt', 'DESC']],
+      attributes: ['id'],
+      include: [
+        {
+          model: sequelize.models.Flight,
+          as: 'flight',
+          attributes: ['arrivalAirportId'],
+        },
+      ],
+    });
+
+    const result = {
+      id: ticket.getDataValue('id'),
+      arrivalAirportId: ticket
+        .getDataValue('flight')
+        .getDataValue('arrivalAirportId'),
+    };
+
+    return result;
   }
 }

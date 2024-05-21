@@ -50,4 +50,9 @@ export class UsersController {
   remove(@Param('sessionId') id: string) {
     return this.usersService.remove(id);
   }
+
+  @Get('/recommendations/:sessionId')
+  async getRecommendations(@Param('sessionId') id: string) {
+    return this.usersService.findRecommendations(id);
+  }
 }

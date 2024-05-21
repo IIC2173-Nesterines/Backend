@@ -45,4 +45,11 @@ export class UsersService {
       },
     });
   }
+
+  async findRecommendations(sessionId: string) {
+    return await sequelize.models.Users.findOne({
+      where: { sessionId: sessionId },
+      attributes: ['recommendationsId', 'recommendationsDate'],
+    });
+  }
 }

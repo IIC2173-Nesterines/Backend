@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
 import sequelize from '../db/config';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class FlightsService {
@@ -69,6 +70,23 @@ export class FlightsService {
 
   async findOne(id: number) {
     return sequelize.models.Flight.findByPk(id);
+  }
+
+  async findUpcomingFlights(purchaseDate: Date, destinationAirportId: string) {
+    const oneWeekLater = new Date(purchaseDate);
+    oneWeekLater.setDate(purchaseDate.getDate() + 7);
+
+    return sequelize.models.Flight.findAll({
+      where: {
+        departureAirportId: destinationAirportId,
+        departureDate: {
+          [Op.between]: [purchaseDate, oneWeekLater],
+        },
+      },
+      order: [['departureDate', 'ASC']],
+      attributes: ['id', 'price', 'arrivalAirportId'],
+      limit: 20,
+    });
   }
 
   update(id: number, updateFlightDto: UpdateFlightDto) {
