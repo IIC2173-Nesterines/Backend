@@ -41,6 +41,18 @@ jobs:
           CONSUMER_TAG: consumer-latest
           WORKER_DASHBOARD_TAG: worker-dashboard-latest
           BROKER_TAG: broker-latest
+          # Variables de entorno:
+          DATABASE_USER: ${{secrets.DATABASE_USER}}
+          DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          CELERY_BROKER_URL: ${{secrets.CELERY_BROKER_URL}}
+          CELERY_RESULT_BACKEND: ${{secrets.CELERY_RESULT_BACKEND}}
+          REDIS_PORT: ${{secrets.REDIS_PORT}}
+          FLOWER_PORT: ${{secrets.FLOWER_PORT}}
+          API_PORT: ${{secrets.API_PORT}}
+
         run: |
           docker compose build
           docker tag backend-producer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
