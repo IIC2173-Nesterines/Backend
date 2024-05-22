@@ -7,6 +7,7 @@ import { FlightsModule } from './flights/flights.module';
 import { RequestsModule } from './requests/requests.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { EmailModule } from './email/email.module';
 import sequelize from './db/config';
 
 @Module({
@@ -19,6 +20,7 @@ import sequelize from './db/config';
     RequestsModule,
     TicketsModule,
     TransactionsModule,
+    EmailModule,
   ],
 })
 export class AppModule {}
