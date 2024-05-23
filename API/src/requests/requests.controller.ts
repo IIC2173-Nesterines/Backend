@@ -35,6 +35,11 @@ export class RequestsController {
     return this.requestsService.createGroup(createRequestDto);
   }
 
+  @Get('/ip')
+  getIp() {
+    return this.requestsService.getIp();
+  }
+
   @Get()
   findAll() {
     return this.requestsService.findAll();
@@ -73,10 +78,5 @@ export class RequestsController {
   @Get('/recommendations/:id')
   getRecommendationStatus(@Param('id') id: string) {
     return this.requestsService.getRecommendationStatus(id);
-  }
-
-  @Get('/ip')
-  getIp() {
-    return this.requestsService.getIp();
   }
 }
