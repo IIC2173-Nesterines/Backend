@@ -74,4 +74,9 @@ export class RequestsController {
   getRecommendationStatus(@Param('id') id: string) {
     return this.requestsService.getRecommendationStatus(id);
   }
+
+  @Get('/ip')
+  getIp() {
+    return this.requestsService.getIp();
+  }
 }
