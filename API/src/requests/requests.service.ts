@@ -252,4 +252,14 @@ export class RequestsService {
       return err;
     }
   }
+
+  async getIp() {
+    try {
+      const ip = await axios.get('http://ip-api.com/json');
+      return ip.data;
+    } catch (err) {
+      console.log('Error', err);
+      return err;
+    }
+  }
 }
