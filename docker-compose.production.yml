@@ -63,7 +63,7 @@ services: # The containers we are going to run
   consumer:
     image: public.ecr.aws/r9l6i0a8/arquisisters:consumer-latest
     deploy:
-      replicas: 2
+      replicas: 1
     command: celery -A consumer.celery_app worker --loglevel=INFO --purge --concurrency=1
     networks:
       - api-network
@@ -74,22 +74,22 @@ services: # The containers we are going to run
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
-  worker-dashboard:
-    image: public.ecr.aws/r9l6i0a8/arquisisters:worker-dashboard-latest
-    command: bash -c "sleep 10; celery -A consumer.celery_app flower --loglevel=INFO --url_prefix=dashboard;"
-    expose:
-      - ${FLOWER_PORT}
-    ports:
-      - '${FLOWER_PORT}:${FLOWER_PORT}'
-    volumes:
-      - ./Workers/project:/opt/
-    depends_on:
-      - consumer
-    networks:
-      - api-network
-    environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+  # worker-dashboard:
+  #   image: public.ecr.aws/r9l6i0a8/arquisisters:worker-dashboard-latest
+  #   command: bash -c "sleep 10; celery -A consumer.celery_app flower --loglevel=INFO --url_prefix=dashboard;"
+  #   expose:
+  #     - ${FLOWER_PORT}
+  #   ports:
+  #     - '${FLOWER_PORT}:${FLOWER_PORT}'
+  #   volumes:
+  #     - ./Workers/project:/opt/
+  #   depends_on:
+  #     - consumer
+  #   networks:
+  #     - api-network
+  #   environment:
+  #     CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+  #     CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
 
 networks: # All the networks that connects our containers
   api-network:

@@ -30,6 +30,58 @@ jobs:
         with:
           registry-type: public
           mask-password: "true"
+      
+      - name: Create .env base directory
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DATABASE_USER: ${{secrets.DATABASE_USER}}
+          envkey_DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          envkey_DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          envkey_DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          envkey_DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          envkey_CELERY_BROKER_URL: ${{secrets.CELERY_BROKER_URL}}
+          envkey_CELERY_RESULT_BACKEND: ${{secrets.CELERY_RESULT_BACKEND}}
+          envkey_REDIS_PORT: ${{secrets.REDIS_PORT}}
+          envkey_FLOWER_PORT: ${{secrets.FLOWER_PORT}}
+          envkey_API_PORT: ${{secrets.API_PORT}}
+          directory: ./
+          file_name: .env
+          fail_on_empty: true
+        
+      - name: Create API .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DATABASE_USER: ${{secrets.DATABASE_USER}}
+          envkey_DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          envkey_DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          envkey_DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          envkey_DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          envkey_AUTH0_AUDIENCE: ${{secrets.AUTH0_AUDIENCE}}
+          envkey_AUTH0_ISSUER_URL: ${{secrets.AUTH0_ISSUER_URL}}
+          envkey_API_PORT: ${{secrets.API_PORT}}
+          envkey_MQTT_HOST: ${{secrets.MQTT_HOST}}
+          envkey_MQTT_PORT: ${{secrets.MQTT_PORT}}
+          envkey_MQTT_USERNAME: ${{secrets.MQTT_USERNAME}}
+          envkey_MQTT_PASSWORD: ${{secrets.MQTT_PASSWORD}}
+          envkey_MQTT_CHANNEL: ${{secrets.MQTT_CHANNEL}}
+          envkey_WEBPAY_PLUS_COMMERCIAL_CODE: ${{secrets.WEBPAY_PLUS_COMMERCIAL_CODE}}
+          envkey_TRANSBANK_API_KEY_SECRET: ${{secrets.TRANSBANK_API_KEY_SECRET}}
+          envkey_TRANSBANK_BASE_URL: ${{secrets.TRANSBANK_BASE_URL}}
+          directory: ./API/
+          file_name: .env
+          fail_on_empty: true
+
+      - name: Create Broker .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_HOST: ${{secrets.MQTT_HOST}}
+          envkey_PORT: ${{secrets.MQTT_PORT}}
+          envkey_USERNAME: ${{secrets.MQTT_USERNAME}}
+          envkey_PASSWORD: ${{secrets.MQTT_PASSWORD}}
+          envkey_API_URL: ${{secrets.API_URL}}
+          directory: ./Broker/
+          file_name: .env
+          fail_on_empty: true
 
       - name: Build, tag and push API image to Amazon ECR Public
         env:
@@ -39,30 +91,16 @@ jobs:
           API_TAG: api-latest
           PRODUCER_TAG: producer-latest
           CONSUMER_TAG: consumer-latest
-          WORKER_DASHBOARD_TAG: worker-dashboard-latest
           BROKER_TAG: broker-latest
-          # Variables de entorno:
-          DATABASE_USER: ${{secrets.DATABASE_USER}}
-          DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-          DATABASE_PORT: ${{secrets.DATABASE_PORT}}
-          DATABASE_NAME: ${{secrets.DATABASE_NAME}}
-          DATABASE_HOST: ${{secrets.DATABASE_HOST}}
-          CELERY_BROKER_URL: ${{secrets.CELERY_BROKER_URL}}
-          CELERY_RESULT_BACKEND: ${{secrets.CELERY_RESULT_BACKEND}}
-          REDIS_PORT: ${{secrets.REDIS_PORT}}
-          FLOWER_PORT: ${{secrets.FLOWER_PORT}}
-          API_PORT: ${{secrets.API_PORT}}
 
         run: |
           docker compose build
           docker tag backend-producer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
           docker tag backend-consumer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
-          docker tag backend-worker-dashboard:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$WORKER_DASHBOARD_TAG
           docker tag backend-broker:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
           docker tag backend-api:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG 
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$WORKER_DASHBOARD_TAG
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG
 
