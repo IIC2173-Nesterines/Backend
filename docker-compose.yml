@@ -37,11 +37,11 @@ services: # The containers we are going to run
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_NAME}
-    
+
     volumes:
       # To persist the data in the database we have a volume that persist after container deletion
       # and copy the files from the container to the volume.
-      - db-volume:/var/lib/postgresql/data 
+      - db-volume:/var/lib/postgresql/data
   redis-broker:
     image: redis:7
     volumes:
@@ -71,7 +71,7 @@ services: # The containers we are going to run
       context: ./Workers/project
       dockerfile: Dockerfile
     deploy:
-      replicas: 2
+      replicas: 1
     command: celery -A consumer.celery_app worker --loglevel=INFO --purge --concurrency=1
     networks:
       - api-network
@@ -82,24 +82,24 @@ services: # The containers we are going to run
     environment:
       CELERY_BROKER_URL: ${CELERY_BROKER_URL}
       CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
-  worker-dashboard:
-    build:
-      context: ./Workers/project
-      dockerfile: Dockerfile
-    command: bash -c "sleep 10; celery -A consumer.celery_app flower --loglevel=INFO --url_prefix=dashboard;"
-    expose:
-      - ${FLOWER_PORT}
-    ports:
-      - '${FLOWER_PORT}:${FLOWER_PORT}'
-    volumes:
-      - ./Workers/project:/opt/
-    depends_on:
-      - consumer
-    networks:
-      - api-network
-    environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+#  worker-dashboard:
+#    build:
+#      context: ./Workers/project
+#      dockerfile: Dockerfile
+#    command: bash -c "sleep 10; celery -A consumer.celery_app flower --loglevel=INFO --url_prefix=dashboard;"
+#    expose:
+#      - ${FLOWER_PORT}
+#    ports:
+#      - '${FLOWER_PORT}:${FLOWER_PORT}'
+#    volumes:
+#      - ./Workers/project:/opt/
+#    depends_on:
+#      - consumer
+#    networks:
+#      - api-network
+#    environment:
+#      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+#      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
 
 networks: # All the networks that connects our containers
   api-network:

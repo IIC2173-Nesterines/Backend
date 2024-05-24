@@ -8,9 +8,9 @@ files:
     destination: /home/ubuntu/scripts/
 
 hooks:
-  ApplicationStop:
-    - location: ./scripts/application-stop.sh
-      timeout: 10000
+  # ApplicationStop:
+  #   - location: ./scripts/application-stop.sh
+  #     timeout: 10000
   AfterInstall:
     - location: ./scripts/after-install.sh
       timeout: 3000

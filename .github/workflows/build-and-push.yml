@@ -1,0 +1,147 @@
+name: Build and Push to ECR
+
+on:
+  pull_request: 
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID0}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY0}}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+          mask-password: "true"
+      
+      - name: Create .env base directory
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DATABASE_USER: ${{secrets.DATABASE_USER}}
+          envkey_DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          envkey_DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          envkey_DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          envkey_DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          envkey_CELERY_BROKER_URL: ${{secrets.CELERY_BROKER_URL}}
+          envkey_CELERY_RESULT_BACKEND: ${{secrets.CELERY_RESULT_BACKEND}}
+          envkey_REDIS_PORT: ${{secrets.REDIS_PORT}}
+          envkey_FLOWER_PORT: ${{secrets.FLOWER_PORT}}
+          envkey_API_PORT: ${{secrets.API_PORT}}
+          directory: ./
+          file_name: .env
+          fail_on_empty: true
+        
+      - name: Create API .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_DATABASE_USER: ${{secrets.DATABASE_USER}}
+          envkey_DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          envkey_DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+          envkey_DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+          envkey_DATABASE_HOST: ${{secrets.DATABASE_HOST}}
+          envkey_AUTH0_AUDIENCE: ${{secrets.AUTH0_AUDIENCE}}
+          envkey_AUTH0_ISSUER_URL: ${{secrets.AUTH0_ISSUER_URL}}
+          envkey_API_PORT: ${{secrets.API_PORT}}
+          envkey_MQTT_HOST: ${{secrets.MQTT_HOST}}
+          envkey_MQTT_PORT: ${{secrets.MQTT_PORT}}
+          envkey_MQTT_USERNAME: ${{secrets.MQTT_USERNAME}}
+          envkey_MQTT_PASSWORD: ${{secrets.MQTT_PASSWORD}}
+          envkey_MQTT_CHANNEL: ${{secrets.MQTT_CHANNEL}}
+          envkey_WEBPAY_PLUS_COMMERCIAL_CODE: ${{secrets.WEBPAY_PLUS_COMMERCIAL_CODE}}
+          envkey_TRANSBANK_API_KEY_SECRET: ${{secrets.TRANSBANK_API_KEY_SECRET}}
+          envkey_TRANSBANK_BASE_URL: ${{secrets.TRANSBANK_BASE_URL}}
+          directory: ./API/
+          file_name: .env
+          fail_on_empty: true
+
+      - name: Create Broker .env file
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+          envkey_HOST: ${{secrets.MQTT_HOST}}
+          envkey_PORT: ${{secrets.MQTT_PORT}}
+          envkey_USERNAME: ${{secrets.MQTT_USERNAME}}
+          envkey_PASSWORD: ${{secrets.MQTT_PASSWORD}}
+          envkey_API_URL: ${{secrets.API_URL}}
+          directory: ./Broker/
+          file_name: .env
+          fail_on_empty: true
+
+      - name: Build, tag and push API image to Amazon ECR Public
+        env:
+          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+          REGISTRY_ALIAS: r9l6i0a8
+          REPOSITORY: arquisisters
+          API_TAG: api-latest
+          PRODUCER_TAG: producer-latest
+          CONSUMER_TAG: consumer-latest
+          BROKER_TAG: broker-latest
+
+        run: |
+          docker compose build
+          docker tag backend-producer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
+          docker tag backend-consumer:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
+          docker tag backend-broker:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
+          docker tag backend-api:latest $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG 
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PRODUCER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$CONSUMER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$BROKER_TAG
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$API_TAG
+
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID0}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY0}}
+          aws-region: us-east-1
+      
+      - name: Login to Amazon ECR
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+          mask-password: "true"
+      
+      - name: Zip Artifact to Deploy
+        run: |
+          zip -r deploy.zip scripts/ appspec.yml docker-compose.production.yml
+      
+      - name: Copy Zip to S3
+        run: |
+          aws s3 cp deploy.zip s3://nesterines-code-deploy/deploy.zip
+      
+      - name: Create CodeDeploy Deployment
+        id: create-deployment-trigger
+        run: |
+          deploymentId=$(aws deploy create-deployment --application-name \
+          CodeDeployNesterinesApp --deployment-group-name CodeDeployGroup2 --region us-east-1 \
+          --s3-location bucket=nesterines-code-deploy,key=deploy.zip,bundleType=zip \
+          --description "Automatic deployment from githubactions commit ${{github.sha}}" | jq -r '.deploymentId')
+          echo "DeploymentId=$deploymentId" >> $GITHUB_OUTPUT
+      
+      - name: Wait for deployment to finish
+        run: |
+          aws deploy wait deployment-successful --deployment-id ${{ steps.create-deployment-trigger.outputs.deploymentId }} --region us-east-1
